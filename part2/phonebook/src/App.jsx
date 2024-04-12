@@ -41,12 +41,21 @@ function App() {
     setNewNumber('')
   }
 
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)){
+      personService
+        .deleteObject(person.id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== response.id))
+        })
+    }
+  }
+
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
 
   const personsToShow = persons.filter(person => {
-    console.log(person);
     return person.name.toLowerCase().includes(filter.toLowerCase())
   })
 
@@ -62,7 +71,15 @@ function App() {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      {personsToShow.map(person => <Person key={person.id} person={person}/>)}
+      {personsToShow.map(person => {
+        return (
+          <Person
+            key={person.id}
+            person={person}
+            handleDeleteButton={() => deletePerson(person)}
+          />
+        )
+      })}
     </div>
   )
 }
