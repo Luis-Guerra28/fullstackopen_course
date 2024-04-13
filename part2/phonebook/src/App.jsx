@@ -27,8 +27,18 @@ function App() {
       name: newName,
       number: newNumber,
     }
-    if (persons.some(person => person.name === newPerson.name)){
-      alert(`${newName} is already added to phonebook`)
+
+    const reference = persons.findIndex((person => person.name === newPerson.name))
+
+    if (reference !== -1){
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one`)){
+        personService
+          .updateObject(persons[reference].id, newPerson)
+          .then(response => {
+            setPersons(persons.filter((_, i) => i !== reference).concat(response))
+          })
+      }
+      //CODIGO AQUI
     }else {
       personService
         .create(newPerson)
@@ -46,6 +56,7 @@ function App() {
       personService
         .deleteObject(person.id)
         .then(response => {
+          console.log(persons.filter(person => person.id !== response.id));
           setPersons(persons.filter(person => person.id !== response.id))
         })
     }
