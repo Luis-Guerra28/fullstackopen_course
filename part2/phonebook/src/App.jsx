@@ -11,7 +11,7 @@ function App() {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [notification, setNotification] = useState('Here is a notification')
+  const [notification, setNotification] = useState({text: null, isError: false})
 
 
   useEffect(() => {
@@ -38,8 +38,15 @@ function App() {
           .updateObject(persons[reference].id, newPerson)
           .then(response => {
             setPersons(persons.filter((_, i) => i !== reference).concat(response))
+            setNotification({text: `${newPerson.name} number has been changed`, isError: false})
           })
-        setNotification(`${newPerson.name} number has been changed`)
+          .catch(() => {
+            setNotification({
+              text: `Information of ${newPerson.name} has already been removed from server`,
+              isError: true
+            })
+            setPersons(persons.filter((_, i) => i !== reference))
+          })
         
       }
     }else {
@@ -47,13 +54,13 @@ function App() {
         .create(newPerson)
         .then(response => {
           setPersons(persons.concat(response))
-        })  
-      setNotification(`Added ${newPerson.name}`)
+        })
+      setNotification({text: `Added ${newPerson.name}`, type: notification})
     }
 
 
     setTimeout(() => {
-      setNotification(null)
+      setNotification({text: null, type: null})
     }, 1000);
 
     setNewName('')
@@ -81,7 +88,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification text={notification}/>
+      <Notification text={notification.text} isError={notification.isError}/>
       <Filter filter={filter} handleFilterChange={handleFilterChange}/>
       <h3>Add a new</h3>
       <PersonForm 
