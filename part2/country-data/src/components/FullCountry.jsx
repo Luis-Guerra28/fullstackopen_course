@@ -1,4 +1,4 @@
-const Country = ({ country }) => {
+const FullCountry = ({ country }) => {
   return (
     <>
       <h1>{country.name}</h1>
@@ -13,4 +13,4 @@ const Country = ({ country }) => {
   )
 }
 
-export default Country
+export default FullCountry

@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import FormCountries from './components/FormCountries'
-import Country from './components/Country'
+import FullCountry from './components/FullCountry'
+import BasicCountry from './components/BasicCountry'
 
 
 const App = () =>  {
@@ -53,14 +54,22 @@ const App = () =>  {
     return (
       <>
         <FormCountries handlerInput={handleCountryChange} valueInput={search}/>
-        <Country country={countryInfo}/>
+        <FullCountry country={countryInfo}/>
       </>
     )
   }
   return (
     <>
       <FormCountries handlerInput={handleCountryChange} valueInput={search}/>
-        {countries.map((country, i) => <div key={i}>{country.name.common}</div>)}
+        {countries.map((country, i) => {
+          return (
+            <BasicCountry
+              key={i}
+              country={country}
+              handlerButton={() => setCountries([country])}
+            />
+          )
+        })}
     </>
   )
 }
