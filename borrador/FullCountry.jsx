@@ -4,14 +4,14 @@ const FullCountry = ({ country, weather }) => {
       <h1>{country.name}</h1>
         <div>capital: {country.capital}</div>
         <div>area: {country.area}</div>
-        <h3>languages</h3>
+        <h3>languages:</h3>
         <ul>
           {country.languages.map((language, i) => <li key={i}>{language}</li>)}
         </ul>
-        <img src={country.flagImg} alt={country.alt} height='200px'/>
+        <img src={country.flagImg} alt={country.alt} height='200px' />
         <h2>Weather in {country.capital}</h2>
-        <div>temperature: {weather.temperature} Celcius</div>
-        <div>wind: {weather.wind} m/s</div>
+        <div>temperature: {weather.temperature}</div>
+        <div>wind: {weather.wind}</div>  
     </>
   )
 }

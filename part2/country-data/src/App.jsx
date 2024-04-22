@@ -1,20 +1,42 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import FormCountries from './components/FormCountries'
 import FullCountry from './components/FullCountry'
 import BasicCountry from './components/BasicCountry'
+import dataService from './services/data'
 
 
 const App = () =>  {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
   const [allCountries, setAllCountries] = useState(null)
+  const [weather, setWeather] = useState({
+    temperature: null,
+    wind: null
+  })
 
-  useEffect( () => {
-    axios
-      .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
-      .then(response => setAllCountries(response.data))
+  const weather_api_key = import.meta.env.VITE_SOME_KEY
+
+  //Countries
+  useEffect(() => {
+    dataService
+      .getAllCountries()
+      .then(response => setAllCountries(response))
   }, [])
+
+  //Weather
+  useEffect(() => {
+    if (countries.length === 1){
+      dataService
+        .getWeather(countries[0].latlng)
+        .then(response => {
+          const newWeather = {
+            temperature: response.data_day.temperature_mean[0],
+            wind: response.data_day.windspeed_mean[0]
+          }
+          setWeather(newWeather)
+        })
+    }
+  }, [countries, weather_api_key])
 
 
   const handleCountryChange = event => {
@@ -54,7 +76,7 @@ const App = () =>  {
     return (
       <>
         <FormCountries handlerInput={handleCountryChange} valueInput={search}/>
-        <FullCountry country={countryInfo}/>
+        <FullCountry country={countryInfo} weather={weather}/>
       </>
     )
   }
