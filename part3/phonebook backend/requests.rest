@@ -1,4 +1,12 @@
+### Get all persons
 GET http://localhost:3001/api/persons
 
-###
+### API info
 GET http://localhost:3001/api/info
+
+### Get a person with id valid
+GET http://localhost:3001/api/persons/2
+
+### Get a person with id invalid
+GET http://localhost:3001/api/persons/a
+
