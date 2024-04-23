@@ -58,10 +58,22 @@ const generateId = () => {
 };
 
 app.post("/api/persons", (request, response) => {
-  const person = request.body;
-  person.id = generateId();
-  persons = persons.concat(person);
-  response.json(person);
+  const newPerson = request.body;
+
+  if (!newPerson.name || !newPerson.number) {
+    return response.status(400).json({
+      error: "name or number missing",
+    });
+  }
+  if (persons.map((person) => person.name).includes(newPerson.name)) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
+  newPerson.id = generateId();
+  persons = persons.concat(newPerson);
+  response.json(newPerson);
 });
 
 const PORT = 3001;

@@ -21,3 +21,12 @@ content-type: application/json
   "name": "Pedro testeos",
   "number": "123123"
 }
+
+### Wrong name validation test
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+  "person": "Pedro testeos",
+  "number": "123123"
+}
