@@ -10,3 +10,6 @@ GET http://localhost:3001/api/persons/2
 ### Get a person with id invalid
 GET http://localhost:3001/api/persons/a
 
+### Delete a person
+DELETE http://localhost:3001/api/persons/2
+
