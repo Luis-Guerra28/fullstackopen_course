@@ -67,12 +67,12 @@ function App() {
     setNewNumber('')
   }
 
-  const deletePerson = (person) => {
-    if (window.confirm(`Delete ${person.name}?`)){
+  const deletePerson = (personDeleted) => {
+    if (window.confirm(`Delete ${personDeleted.name}?`)){
       personService
-        .deleteObject(person.id)
-        .then(response => {
-          setPersons(persons.filter(person => person.id !== response.id))
+        .deleteObject(personDeleted.id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== personDeleted.id))
         })
     }
   }
