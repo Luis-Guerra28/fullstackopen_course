@@ -54,14 +54,17 @@ function App() {
         .create(newPerson)
         .then(response => {
           setPersons(persons.concat(response))
+          setNotification({text: `Added ${newPerson.name}`, isError: false})
         })
-      setNotification({text: `Added ${newPerson.name}`, type: notification})
+        .catch(error => {
+          setNotification({text: error.response.data.error, isError: true})
+        })
     }
 
 
     setTimeout(() => {
       setNotification({text: null, type: null})
-    }, 1000);
+    }, 2000);
 
     setNewName('')
     setNewNumber('')
