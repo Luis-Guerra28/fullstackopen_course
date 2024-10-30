@@ -19,12 +19,9 @@ mongoose.connect(mongoUrl)
 app.use(cors())
 app.use(express.json())
 
-app.get('/api/blogs', (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
+app.get('/api/blogs', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs)
 })
 
 app.post('/api/blogs', (request, response) => {
