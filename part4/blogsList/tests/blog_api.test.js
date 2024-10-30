@@ -27,9 +27,30 @@ test('all blogs are returned', async () => {
   assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
-test.only('the blogs id are the correct name', async () => {
+test('the blogs id are the correct name', async () => {
   const response = await api.get('/api/blogs')
   assert(Object.keys(response.body[0]).includes('id'))
+})
+
+test.only('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Blog de prueba',
+    author: 'Krespo',
+    url: 'http://krespo.com',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map(blog => blog.title)
+  assert(titles.includes(newBlog.title))
 })
 
 after(async () => {
