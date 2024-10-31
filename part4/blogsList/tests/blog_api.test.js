@@ -6,6 +6,7 @@ const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
 const api = supertest(app)
+const _ = require('lodash')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -32,7 +33,7 @@ test('the blogs id are the correct name', async () => {
   assert(Object.keys(response.body[0]).includes('id'))
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Blog de prueba',
     author: 'Krespo',
@@ -51,6 +52,32 @@ test.only('a valid blog can be added', async () => {
 
   const titles = blogsAtEnd.map(blog => blog.title)
   assert(titles.includes(newBlog.title))
+})
+
+test('A blog without likes can be added correctly', async () => {
+  const newBlog = {
+    title: 'Blog sin likes',
+    author: 'Le pepe',
+    url: 'http://Lepepe.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+  const blogAdded = _.find(blogsAtEnd, newBlog,
+    (objValue, otherValue, key) => {
+      if (key === 'likes') {
+        return true
+      }
+    })
+
+  assert.strictEqual(blogAdded.likes, 0)
 })
 
 after(async () => {
