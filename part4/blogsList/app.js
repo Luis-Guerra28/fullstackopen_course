@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+require('express-async-errors')
 const cors = require('cors')
 const config = require('./utils/config')
+const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const Blog = require('./models/blog')
 
@@ -24,7 +26,7 @@ app.get('/api/blogs', async (request, response) => {
   response.json(blogs)
 })
 
-app.post('/api/blogs', (request, response) => {
+app.post('/api/blogs',async (request, response) => {
   const body = request.body
 
   const blog = new Blog({
@@ -34,12 +36,11 @@ app.post('/api/blogs', (request, response) => {
     likes: body.likes || 0
   })
 
+  const result = await blog.save()
+  response.status(201).json(result)
 
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
 })
+
+app.use(middleware.errorHandler)
 
 module.exports = app

@@ -80,6 +80,32 @@ test('A blog without likes can be added correctly', async () => {
   assert.strictEqual(blogAdded.likes, 0)
 })
 
+test.only('a wrong blogs are not added', async () => {
+  const wrongBlogs = [
+    {
+      title: 'Blog sin url',
+      author: 'Krespo',
+      likes: 0
+    },
+    {
+      author: 'Krespo',
+      url: 'http://withouttitle.com',
+      likes: 0
+    }
+  ]
+
+  await Promise.all(wrongBlogs.map(blog => {
+    return api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(400)
+  }))
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
